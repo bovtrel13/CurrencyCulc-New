@@ -20,11 +20,11 @@ This is a simple currency converter application built with React. The applicatio
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/bovtrel13/Currency-Exchange.git
+    git clone https://github.com/bovtrel13/CurrencyCulc-New.git
     ```
 2. Navigate to the project directory:
     ```bash
-    cd CurrencyConverter-GitHub-Project
+    cd Currency-Culc
     ```
 3. Install the dependencies:
     ```bash
