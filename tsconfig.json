@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-      "target": "ES2020",
+      "target": "ES6",
       "module": "CommonJS",
       "lib": [
         "dom",
@@ -19,12 +19,12 @@
       "resolveJsonModule": true,
       "isolatedModules": true,
       "outDir": "./dist", 
+      "rootDir": "./src",
       "jsx": "react-jsx"  
     },
     "include": [
       "src",
-      "server.ts",
-  
+      "src/back/server.ts",
     ],
-    "exclude": ["node_modules"]
+    "exclude": ["node_modules", "**/*.spec.ts"]
   }

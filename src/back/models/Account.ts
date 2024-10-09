@@ -1,49 +1,60 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-const { sequelizeAccounts } = require('../../../database');
+import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, Unique, CreatedAt, UpdatedAt } from 'sequelize-typescript';
 
-interface AccountAttributes {
-    username: string;
-    login: string; 
-    password: string;
+@Table({
+  tableName: 'accounts',
+  timestamps: true,
+  freezeTableName: true,
+})
+class Account extends Model {
+
+  @PrimaryKey
+  @AutoIncrement
+  @Column({
+    type: DataType.INTEGER,
+  })
+  id!: number;
+
+  @Column({
+    type: DataType.STRING(20),
+    allowNull: false,
+    validate: {
+      len: [1, 20], 
+    },
+  })
+  username!: string;
+
+  @Unique
+  @Column({
+    type: DataType.STRING(20),
+    allowNull: false,
+    validate: {
+      len: [1, 20], 
+    },
+  })
+  login!: string;
+
+  @Column({
+    type: DataType.STRING(38),
+    allowNull: false,
+    validate: {
+      len: [1, 38],  
+    },
+  })
+  password!: string;
+
+  @CreatedAt
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+  })
+  createdat!: Date;
+
+  @UpdatedAt
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+  })
+  updatedat!: Date;
 }
-
-interface AccountCreationAttributes extends Optional<AccountAttributes, 'login'> {}
-
-class Account extends Model<AccountAttributes, AccountCreationAttributes> implements AccountAttributes {
-    public username!: string;
-    public login!: string;
-    public password!: string;
-}
-
-Account.init({
-    username: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            len: [1, 20],
-        },
-    },
-    login: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-        primaryKey: true,
-        validate: {
-            len: [1, 20],
-        },
-    },
-    password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            len: [1, 38],
-        },
-    },
-}, {
-    sequelize: sequelizeAccounts, 
-    tableName: 'accounts',
-    timestamps: false,
-    freezeTableName: true,
-});
 
 export default Account;
