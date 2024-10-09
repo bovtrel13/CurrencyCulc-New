@@ -1,53 +1,61 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-const { sequelizeCurrencies} = require('../../../database');
+import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, CreatedAt, UpdatedAt } from 'sequelize-typescript';
 
-interface CurrencyAttributes {
-    text: string;
-    symbol: string;
-    code: string; 
-    currencycode: string;
-    rates: number;
-}
-
-interface CurrencyCreationAttributes extends Optional<CurrencyAttributes, 'code'> {}
-
-class Currency extends Model<CurrencyAttributes, CurrencyCreationAttributes> implements CurrencyAttributes {
-    public text!: string;
-    public symbol!: string;
-    public code!: string;
-    public currencycode!: string;
-    public rates!: number;
-}
-
-Currency.init({
-    text: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    symbol: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    code: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        primaryKey: true,
-    },
-    currencycode: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    rates: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-    },
-}, {
-    sequelize: sequelizeCurrencies,
+@Table({
     tableName: 'currencies', 
-    timestamps: false, 
-    updatedAt: false,
-    createdAt: false,
-    freezeTableName: true 
-});
+    timestamps: true,
+    freezeTableName: true, 
+})
+class Currency extends Model {
+    @PrimaryKey
+    @AutoIncrement
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: false,
+    })
+    id!: number;
+
+    @Column({
+        type: DataType.STRING(100),
+        allowNull: false,
+    })
+    text!: string;
+
+    @Column({
+        type: DataType.STRING(10),
+        allowNull: false,
+    })
+    symbol!: string;
+
+    @Column({
+        type: DataType.STRING(10),
+        allowNull: false,
+        unique: true,
+    })
+    code!: string;
+
+    @Column({
+        type: DataType.STRING(10),
+        allowNull: false,
+    })
+    currencycode!: string;
+
+    @Column({
+        type: DataType.DECIMAL(10, 2),
+        allowNull: false,
+    })
+    rates!: number;
+
+    @CreatedAt
+    @Column({
+        type: DataType.DATE,
+    })
+    createdat!: Date;
+
+    @UpdatedAt
+    @Column({
+        type: DataType.DATE,
+    })
+    updatedat!: Date;
+}
 
 export default Currency;

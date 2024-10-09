@@ -1,11 +1,7 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Rates = void 0;
 const jsx_runtime_1 = require("react/jsx-runtime");
-const react_1 = __importDefault(require("react"));
 const mobx_react_lite_1 = require("mobx-react-lite");
 const FromStore_1 = require("../../stores/FromStore");
 require("./Rates.css");

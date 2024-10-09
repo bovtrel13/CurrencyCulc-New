@@ -1,20 +1,22 @@
 import express, { Request, Response } from 'express';
 const cors = require('cors');
 import bodyParser from 'body-parser';
-import sequelize from './database'; // Import the single Sequelize instance
+import "reflect-metadata";
+import { sequelize } from './database'; // Импортируем именованный экспорт
 
 import Currency from './models/Currency'; 
 import Account from './models/Account';
 
 const app = express();
+const PORT = process.env.PORT || 3000; // 3000 или любой другой порт по умолчанию;
 app.use(cors());
 app.use(bodyParser.json());
 
 sequelize.authenticate()
     .then(() => {
         console.log('Соединение с базой данных успешно установлено...');
-            app.listen(process.env.PORT || 5000, () => {
-                console.log(`Сервер запущен на порту ${process.env.PORT || 5000}`);
+            app.listen(PORT, () => {
+                console.log(`Сервер запущен на порту ${PORT}`);
             });
         })
     .catch((err: any) => {
@@ -101,6 +103,10 @@ app.get('/getUsername', async (req: Request, res: Response) => {
     }
 });
 
-app.listen(5000, () => {
-    console.log("Сервер запущен на порту 5000");
-});
+app.get('/', (req, res) => {
+    res.send('Сервер работает!');
+});  
+  
+// app.listen(PORT, () => {
+//     console.log(`Сервер запущен на порту ${PORT}`);
+// });

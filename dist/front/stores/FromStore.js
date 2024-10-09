@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.currencyStore = void 0;
 const mobx_1 = require("mobx");
@@ -11,25 +20,22 @@ class CurrencyStore {
         this.error = null;
         this.successMessage = null;
         this.account = localStorage.getItem('Account') || '';
-        this.initializeData = async () => {
+        this.initializeData = () => __awaiter(this, void 0, void 0, function* () {
             if (this.account) {
-                await this.getFavoriteData();
+                yield this.getFavoriteData();
             }
-            await this.fetchCurrencyData();
-        };
-        this.fetchCurrencyData = async () => {
+            yield this.fetchCurrencyData();
+        });
+        this.fetchCurrencyData = () => __awaiter(this, void 0, void 0, function* () {
             try {
-                const response = await fetch('http://localhost:5000/currencies');
-                const currencyData = await response.json();
+                const response = yield fetch('http://localhost:5000/currencies');
+                const currencyData = yield response.json();
                 const rates = {};
                 currencyData.forEach((item) => {
                     rates[item.code] = item.rate;
                 });
                 (0, mobx_1.runInAction)(() => {
-                    this.items = currencyData.map((item) => ({
-                        ...item,
-                        isFavorite: this.favorite.includes(item.code),
-                    })).sort(this.sortByFavorite);
+                    this.items = currencyData.map((item) => (Object.assign(Object.assign({}, item), { isFavorite: this.favorite.includes(item.code) }))).sort(this.sortByFavorite);
                     this.rates = rates;
                     this.loading = false;
                 });
@@ -40,14 +46,14 @@ class CurrencyStore {
                     this.loading = false;
                 });
             }
-        };
-        this.getFavoriteData = async () => {
+        });
+        this.getFavoriteData = () => __awaiter(this, void 0, void 0, function* () {
             const savedFavorites = localStorage.getItem(this.account || '');
             (0, mobx_1.runInAction)(() => {
                 this.favorite = savedFavorites ? JSON.parse(savedFavorites) : [];
             });
-        };
-        this.addToFavorite = async (favoriteCode) => {
+        });
+        this.addToFavorite = (favoriteCode) => __awaiter(this, void 0, void 0, function* () {
             const favorites = [...this.favorite];
             if (!favorites.includes(favoriteCode)) {
                 favorites.push(favoriteCode);
@@ -55,17 +61,17 @@ class CurrencyStore {
                 (0, mobx_1.runInAction)(() => {
                     this.favorite = favorites;
                 });
-                await this.updateItemsWithFavorites();
+                yield this.updateItemsWithFavorites();
             }
-        };
-        this.removeFromFavorite = async (favoriteCode) => {
+        });
+        this.removeFromFavorite = (favoriteCode) => __awaiter(this, void 0, void 0, function* () {
             const favorites = this.favorite.filter(item => item !== favoriteCode);
             localStorage.setItem(this.account || '', JSON.stringify(favorites));
             (0, mobx_1.runInAction)(() => {
                 this.favorite = favorites;
             });
-            await this.updateItemsWithFavorites();
-        };
+            yield this.updateItemsWithFavorites();
+        });
         this.toggleFavorite = (code) => {
             if (this.favorite.includes(code)) {
                 this.removeFromFavorite(code);
@@ -74,31 +80,28 @@ class CurrencyStore {
                 this.addToFavorite(code);
             }
         };
-        this.updateItemsWithFavorites = async () => {
-            await this.getFavoriteData();
+        this.updateItemsWithFavorites = () => __awaiter(this, void 0, void 0, function* () {
+            yield this.getFavoriteData();
             (0, mobx_1.runInAction)(() => {
-                this.items = this.items.map((item) => ({
-                    ...item,
-                    isFavorite: this.favorite.includes(item.code),
-                })).sort(this.sortByFavorite);
+                this.items = this.items.map((item) => (Object.assign(Object.assign({}, item), { isFavorite: this.favorite.includes(item.code) }))).sort(this.sortByFavorite);
             });
-        };
+        });
         this.sortByFavorite = (a, b) => {
             if (a.isFavorite === b.isFavorite) {
                 return 0;
             }
             return a.isFavorite ? -1 : 1;
         };
-        this.registerUser = async (username, login, password) => {
+        this.registerUser = (username, login, password) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const response = await fetch('http://localhost:5000/accounts', {
+                const response = yield fetch('http://localhost:5000/accounts', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ username, login, password }),
                 });
-                const data = await response.json();
+                const data = yield response.json();
                 (0, mobx_1.runInAction)(() => {
                     if (response.ok) {
                         this.successMessage = 'Регистрация успешна';
@@ -119,17 +122,17 @@ class CurrencyStore {
                     this.successMessage = null;
                 });
             }
-        };
-        this.authoriseUser = async (login, password) => {
+        });
+        this.authoriseUser = (login, password) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const response = await fetch('http://localhost:5000/accounts/login', {
+                const response = yield fetch('http://localhost:5000/accounts/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ login, password }),
                 });
-                const data = await response.json();
+                const data = yield response.json();
                 (0, mobx_1.runInAction)(() => {
                     if (response.ok) {
                         this.successMessage = 'Авторизация успешна';
@@ -150,7 +153,7 @@ class CurrencyStore {
                     this.successMessage = null;
                 });
             }
-        };
+        });
         (0, mobx_1.makeAutoObservable)(this);
         this.initializeData();
     }

@@ -1,11 +1,16 @@
-import { Sequelize } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
+import Account from './models/Account';
+import Currency from './models/Currency';
 import dotenv from 'dotenv';
 
-dotenv.config(); // Load environment variables from .env file
+dotenv.config();
 
-const sequelize = new Sequelize(process.env.DB_NAME || '', process.env.DB_USER || '', process.env.DB_PASSWORD || '', {
-    host: process.env.DB_HOST || 'localhost',
+export const sequelize = new Sequelize({
     dialect: 'postgres',
+    host: process.env.DB_HOST,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    models: [Account, Currency],
+    logging: false,
 });
-
-export default sequelize;

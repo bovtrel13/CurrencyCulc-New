@@ -1,4 +1,4 @@
-const backendUrl = "http://localhost:5000";
+const backendUrl = "http://localhost:3000";
 
 export type ItemType = {
     text: string;
